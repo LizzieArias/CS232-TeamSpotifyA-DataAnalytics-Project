@@ -14,13 +14,13 @@ def get_plot_correlations_arguments() -> PlotCorrelationsSettings:
     _ = parser.add_argument(
         "--input",
         type=Path,
-        default=Path("spotify_tracks.csv"),
+        default=Path("data/normalized/tracks.csv"),
         help="Path to the input Spotify CSV file.",
     )
     _ = parser.add_argument(
         "--output",
         type=Path,
-        default=Path("output_graphs/popularity_correlation.png"),
+        default=Path("data/graphs/popularity_correlation.png"),
         help="Path to save the output PNG graph.",
     )
 
