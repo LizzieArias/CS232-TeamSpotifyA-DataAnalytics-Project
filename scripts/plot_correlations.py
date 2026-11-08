@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 
 from spotify_data_analytics import (
     CorrelationAnalyzer,
+    DataFilterPipeline,
     DataLoader,
     create_correlation_bar_chart,
     get_plot_correlations_arguments,
@@ -16,10 +17,13 @@ def main() -> None:
         settings.target_column,
         settings.features,
     )
-    data = data_loader.load_and_clean()
+    raw_data = data_loader.load_and_clean()
+
+    pipeline = DataFilterPipeline(rules=settings.filters)
+    filtered_data = pipeline.apply(raw_data)
 
     analyzer = CorrelationAnalyzer(
-        data,
+        filtered_data,
         settings.target_column,
         settings.features,
     )
