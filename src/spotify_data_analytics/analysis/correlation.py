@@ -1,0 +1,40 @@
+from typing import Literal
+
+import polars as pl
+
+
+class CorrelationAnalyzer:
+    __slots__: tuple[str, ...] = ("lf", "target", "features")
+    lf: pl.LazyFrame
+    target: str
+    features: list[str]
+
+    def __init__(
+        self,
+        lazy_frame: pl.LazyFrame,
+        target: str,
+        features: list[str],
+    ) -> None:
+        self.lf = lazy_frame
+        self.target = target
+        self.features = features
+
+    def compute_correlations(
+        self,
+        method: Literal["pearson", "spearman"] = "pearson",
+    ) -> dict[str, float]:
+        expressions = [
+            pl.corr(self.target, feature, method=method).alias(feature)
+            for feature in self.features
+        ]
+
+        results_collected = self.lf.select(expressions).collect()  # type: ignore[reportArgumentType]
+
+        correlations: dict[str, float] = {}
+        for feature in self.features:
+            correlation_value = results_collected.get_column(feature).item()  # pyright: ignore[reportAny]
+            correlations[feature] = (
+                correlation_value if correlation_value is not None else 0.0
+            )
+
+        return correlations
