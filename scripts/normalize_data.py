@@ -5,7 +5,7 @@ import polars as pl
 
 def normalize_dataset(
     input_csv_path: str,
-    output_dir: str = "data_clean/normalized",
+    output_dir: str = "data/normalized",
 ) -> None:
     os.makedirs(output_dir, exist_ok=True)
 
@@ -131,6 +131,6 @@ def normalize_dataset(
 
 if __name__ == "__main__":
     normalize_dataset(
-        "data_raw/spotify-tracks-dataset-detailed.csv",
-        output_dir="data_clean/normalized",
+        "data/raw/spotify-tracks-dataset-detailed.csv",
+        output_dir="data/normalized",
     )
