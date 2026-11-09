@@ -6,6 +6,7 @@ from spotify_data_analytics import (
     DataLoader,
     create_correlation_bar_chart,
     get_plot_correlations_arguments,
+    save_figure,
 )
 
 
@@ -32,7 +33,7 @@ def main() -> None:
     fig, _ = create_correlation_bar_chart(correlations, settings.title)
 
     settings.output_path.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(settings.output_path, dpi=300)  # pyright: ignore[reportUnknownMemberType]
+    save_figure(fig, settings.output_path)
 
     plt.close(fig)
 

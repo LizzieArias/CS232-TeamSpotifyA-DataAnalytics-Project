@@ -4,11 +4,17 @@ from typing import TYPE_CHECKING
 import matplotlib.pyplot as plt
 
 if TYPE_CHECKING:
+    from pathlib import Path
+
     from matplotlib.axes import Axes
     from matplotlib.figure import Figure
     from matplotlib.patches import Rectangle
 
-__all__ = ["create_correlation_bar_chart"]
+__all__ = ["save_figure", "create_correlation_bar_chart"]
+
+
+def save_figure(figure: Figure, output_path: Path | str) -> None:
+    figure.savefig(output_path, dpi=300, bbox_inches="tight")
 
 
 def create_correlation_bar_chart(

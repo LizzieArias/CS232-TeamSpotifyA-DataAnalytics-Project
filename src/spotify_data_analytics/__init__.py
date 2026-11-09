@@ -9,7 +9,7 @@ from .filtering import (
     MinThresholdFilter,
     RangeFilter,
 )
-from .plotting import create_correlation_bar_chart
+from .plotting import create_correlation_bar_chart, save_figure
 from .settings import PlotCorrelationsSettings
 
 __all__ = [
@@ -23,5 +23,6 @@ __all__ = [
     "MinThresholdFilter",
     "RangeFilter",
     "create_correlation_bar_chart",
+    "save_figure",
     "PlotCorrelationsSettings",
 ]
