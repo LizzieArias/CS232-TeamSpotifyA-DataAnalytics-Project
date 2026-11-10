@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -13,6 +13,7 @@ __all__ = ["AnalyzeCorrelationsSettings", "PlotCorrelationsSettings"]
 class AnalyzeCorrelationsSettings:
     input_path: Path
     output_path: Path
+    method: Literal["pearson", "spearman"]
     alpha: float
     target_column: str = "popularity"
     filters: list["FilterRule"] = field(default_factory=list)
@@ -33,6 +34,7 @@ class AnalyzeCorrelationsSettings:
 class PlotCorrelationsSettings:
     input_path: Path
     output_path: Path
+    method: Literal["pearson", "spearman"]
     title: str
     target_column: str = "popularity"
     filters: list["FilterRule"] = field(default_factory=list)

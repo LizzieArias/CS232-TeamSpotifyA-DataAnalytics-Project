@@ -12,6 +12,7 @@ from spotify_data_analytics import (
 def main() -> None:
     settings = get_analyze_correlations_arguments()
     alpha = settings.alpha
+    method = settings.method
 
     data_loader = DataLoader(
         settings.input_path,
@@ -27,12 +28,13 @@ def main() -> None:
         settings.target_column,
         settings.features,
     )
-    results = analyzer.compute_significance(method="pearson")
+    results = analyzer.compute_significance(method=method)
 
     df_results = pl.DataFrame(
         [
             {
                 "feature": feature,
+                "method": method,
                 "correlation": correlation,
                 "p_value": p_value,
                 "alpha": alpha,

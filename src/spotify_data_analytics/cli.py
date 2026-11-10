@@ -33,6 +33,13 @@ def get_analyze_correlations_arguments() -> AnalyzeCorrelationsSettings:
         help="Path to save the output significance analysis CSV file.",
     )
     _ = parser.add_argument(
+        "--method",
+        type=str,
+        choices=["pearson", "spearman"],
+        default="spearman",
+        help="Statistical correlation method to use.",
+    )
+    _ = parser.add_argument(
         "--alpha",
         type=float,
         default=0.05,
@@ -100,6 +107,7 @@ def get_analyze_correlations_arguments() -> AnalyzeCorrelationsSettings:
     return AnalyzeCorrelationsSettings(
         input_path=namespace.input,  # pyright: ignore[reportAny]
         output_path=namespace.output,  # pyright: ignore[reportAny]
+        method=namespace.method,  # pyright: ignore[reportAny]
         alpha=namespace.alpha,  # pyright: ignore[reportAny]
         filters=filter_rules,
     )
@@ -120,13 +128,20 @@ def get_plot_correlations_arguments() -> PlotCorrelationsSettings:
     _ = parser.add_argument(
         "--output",
         type=Path,
-        default=Path("data/graphs/popularity_correlation.png"),
+        default=Path("data/graphs/popularity_correlations.png"),
         help="Path to save the output PNG graph.",
+    )
+    _ = parser.add_argument(
+        "--method",
+        type=str,
+        choices=["pearson", "spearman"],
+        default="spearman",
+        help="Statistical correlation method to use.",
     )
     _ = parser.add_argument(
         "--title",
         type=str,
-        default="Correlation with Track Popularity",
+        default="Spearman Correlation Between Popularity and Metrics",
         help="Title to give the graph.",
     )
     _ = parser.add_argument(
@@ -191,6 +206,7 @@ def get_plot_correlations_arguments() -> PlotCorrelationsSettings:
     return PlotCorrelationsSettings(
         input_path=namespace.input,  # pyright: ignore[reportAny]
         output_path=namespace.output,  # pyright: ignore[reportAny]
+        method=namespace.method,  # pyright: ignore[reportAny]
         title=namespace.title,  # pyright: ignore[reportAny]
         filters=filter_rules,
     )

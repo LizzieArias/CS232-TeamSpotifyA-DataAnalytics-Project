@@ -28,7 +28,7 @@ def main() -> None:
         settings.target_column,
         settings.features,
     )
-    correlations = analyzer.compute_correlations(method="pearson")
+    correlations = analyzer.compute_correlations(method=settings.method)
 
     fig, _ = create_correlation_bar_chart(correlations, settings.title)
     save_figure(fig, settings.output_path)
