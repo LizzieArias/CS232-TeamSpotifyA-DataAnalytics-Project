@@ -14,7 +14,7 @@ from .filtering import (
     RangeFilter,
 )
 from .gam import GamAnalyzer
-from .plotting import create_correlation_bar_chart, save_figure
+from .plotting import create_correlation_bar_chart, create_gam_fit, save_figure
 from .settings import AnalyzeCorrelationsSettings, PlotCorrelationsSettings
 from .significance import CorrelationSignificanceAnalyzer
 from .storage import CsvStorage, DataStorage, JsonStorage, create_storage
@@ -33,6 +33,7 @@ __all__ = [
     "RangeFilter",
     "GamAnalyzer",
     "create_correlation_bar_chart",
+    "create_gam_fit",
     "save_figure",
     "AnalyzeCorrelationsSettings",
     "PlotCorrelationsSettings",
