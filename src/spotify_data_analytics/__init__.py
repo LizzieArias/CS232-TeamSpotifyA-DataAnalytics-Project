@@ -12,6 +12,7 @@ from .filtering import (
     MinThresholdFilter,
     RangeFilter,
 )
+from .gam import GamAnalyzer
 from .plotting import create_correlation_bar_chart, save_figure
 from .settings import AnalyzeCorrelationsSettings, PlotCorrelationsSettings
 from .significance import CorrelationSignificanceAnalyzer
@@ -28,6 +29,7 @@ __all__ = [
     "MaxThresholdFilter",
     "MinThresholdFilter",
     "RangeFilter",
+    "GamAnalyzer",
     "create_correlation_bar_chart",
     "save_figure",
     "AnalyzeCorrelationsSettings",
