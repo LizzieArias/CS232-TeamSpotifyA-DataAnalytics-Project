@@ -7,6 +7,7 @@ from .settings import (
     AnalyzeCorrelationsSettings,
     PlotCorrelationsSettings,
     PlotGamSettings,
+    PlotInteractionsSettings,
 )
 
 if TYPE_CHECKING:
@@ -16,6 +17,7 @@ __all__ = [
     "get_analyze_correlations_arguments",
     "get_plot_correlations_arguments",
     "get_plot_gam_arguments",
+    "get_plot_interactions_arguments",
 ]
 
 
@@ -323,5 +325,111 @@ def get_plot_gam_arguments() -> PlotGamSettings:
         n_splines=namespace.n_splines,  # pyright: ignore[reportAny]
         n_grid=namespace.n_grid,  # pyright: ignore[reportAny]
         scale_divisor=namespace.scale_divisor,  # pyright: ignore[reportAny]
+        filters=filter_rules,
+    )
+
+
+def get_plot_interactions_arguments() -> PlotInteractionsSettings:
+    parser = argparse.ArgumentParser(
+        description="Calculate, analyze, and plot feature interactions "
+        + "and their effect on Spotify track popularity.",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+    _ = parser.add_argument(
+        "--input",
+        type=Path,
+        default=Path("data/normalized/tracks.csv"),
+        help="Path to the input Spotify CSV file.",
+    )
+    _ = parser.add_argument(
+        "--graph-output",
+        type=Path,
+        default=Path("data/graphs/popularity_interactions.png"),
+        help="Path to save the output PNG graph.",
+    )
+    _ = parser.add_argument(
+        "--stats-output",
+        type=Path,
+        default=Path("data/significance/popularity_interactions.csv"),
+        help="Path to save the output statistical report.",
+    )
+    _ = parser.add_argument(
+        "--method",
+        type=str,
+        choices=["pearson", "spearman"],
+        default="spearman",
+        help="Statistical correlation method to use.",
+    )
+    _ = parser.add_argument(
+        "--title",
+        type=str,
+        default="Top Feature Interactions vs. Spotify Popularity",
+        help="Title to give the graph.",
+    )
+    _ = parser.add_argument(
+        "--min-threshold",
+        nargs=2,
+        action="append",
+        metavar=("COLUMN", "VALUE"),
+        help="Add a minimum threshold filter "
+        + "(e.g., --min-threshold popularity 10)",
+    )
+    _ = parser.add_argument(
+        "--max-threshold",
+        nargs=2,
+        action="append",
+        metavar=("COLUMN", "VALUE"),
+        help="Add a maximum threshold filter "
+        + "(e.g., --max-threshold duration_ms 360000)",
+    )
+    _ = parser.add_argument(
+        "--range",
+        nargs=3,
+        action="append",
+        metavar=("COLUMN", "MIN", "MAX"),
+        help="Add a range filter (e.g., --range duration_ms 120000 360000)",
+    )
+
+    namespace = parser.parse_args()
+
+    filter_rules: list[FilterRule] = []
+
+    min_thresholds: list[list[str]] | None = namespace.min_threshold  # pyright: ignore[reportAny]
+    if min_thresholds:
+        for column, value_string in min_thresholds:
+            filter_rules.append(
+                MinThresholdFilter(
+                    column=column,
+                    threshold=float(value_string),
+                )
+            )
+
+    max_thresholds: list[list[str]] | None = namespace.max_threshold  # pyright: ignore[reportAny]
+    if max_thresholds:
+        for column, value_string in max_thresholds:
+            filter_rules.append(
+                MaxThresholdFilter(
+                    column=column,
+                    threshold=float(value_string),
+                )
+            )
+
+    ranges: list[list[str]] | None = namespace.range  # pyright: ignore[reportAny]
+    if ranges:
+        for column, min_str, max_str in ranges:
+            filter_rules.append(
+                RangeFilter(
+                    column=column,
+                    min_value=float(min_str),
+                    max_value=float(max_str),
+                )
+            )
+
+    return PlotInteractionsSettings(
+        input_path=namespace.input,  # pyright: ignore[reportAny]
+        graph_output_path=namespace.graph_output,  # pyright: ignore[reportAny]
+        stats_output_path=namespace.stats_output,  # pyright: ignore[reportAny]
+        method=namespace.method,  # pyright: ignore[reportAny]
+        title=namespace.title,  # pyright: ignore[reportAny]
         filters=filter_rules,
     )

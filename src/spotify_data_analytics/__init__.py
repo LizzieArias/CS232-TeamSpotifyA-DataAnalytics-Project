@@ -5,6 +5,7 @@ from .cli import (
     get_analyze_correlations_arguments,
     get_plot_correlations_arguments,
     get_plot_gam_arguments,
+    get_plot_interactions_arguments,
 )
 from .data_loading import DataLoader
 from .filtering import (
@@ -27,6 +28,7 @@ from .settings import (
     AnalyzeCorrelationsSettings,
     PlotCorrelationsSettings,
     PlotGamSettings,
+    PlotInteractionsSettings,
 )
 from .significance import CorrelationSignificanceAnalyzer
 from .storage import CsvStorage, DataStorage, JsonStorage, create_storage
@@ -46,6 +48,7 @@ __all__ = [
     "get_analyze_correlations_arguments",
     "get_plot_correlations_arguments",
     "get_plot_gam_arguments",
+    "get_plot_interactions_arguments",
     "DataLoader",
     "CategoryFilter",
     "DataFilterPipeline",
@@ -62,6 +65,7 @@ __all__ = [
     "AnalyzeCorrelationsSettings",
     "PlotCorrelationsSettings",
     "PlotGamSettings",
+    "PlotInteractionsSettings",
     "CorrelationSignificanceAnalyzer",
     "CsvStorage",
     "DataStorage",

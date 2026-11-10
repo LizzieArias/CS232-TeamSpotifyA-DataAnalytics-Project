@@ -10,6 +10,7 @@ __all__ = [
     "AnalyzeCorrelationsSettings",
     "PlotCorrelationsSettings",
     "PlotGamSettings",
+    "PlotInteractionsSettings",
 ]
 
 
@@ -70,3 +71,27 @@ class PlotGamSettings:
     feature_column: str = "duration_ms"
     scale_divisor: float = 60000.0
     filters: list["FilterRule"] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class PlotInteractionsSettings:
+    input_path: Path
+    graph_output_path: Path
+    stats_output_path: Path
+    method: Literal["pearson", "spearman"]
+    title: str
+    target_column: str = "popularity"
+    filters: list["FilterRule"] = field(default_factory=list)
+    features: list[str] = field(
+        default_factory=lambda: [
+            "danceability",
+            "energy",
+            "tempo",
+            "loudness",
+            "speechiness",
+            "acousticness",
+            "instrumentalness",
+            "liveness",
+            "valence",
+        ]
+    )
