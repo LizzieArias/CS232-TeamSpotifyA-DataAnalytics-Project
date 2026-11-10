@@ -11,6 +11,7 @@ from .filtering import (
 )
 from .plotting import create_correlation_bar_chart, save_figure
 from .settings import PlotCorrelationsSettings
+from .significance import CorrelationSignificanceAnalyzer
 
 __all__ = [
     "CorrelationAnalyzer",
@@ -25,4 +26,5 @@ __all__ = [
     "create_correlation_bar_chart",
     "save_figure",
     "PlotCorrelationsSettings",
+    "CorrelationSignificanceAnalyzer",
 ]

@@ -4,8 +4,8 @@ import polars as pl
 
 
 class CorrelationAnalyzer:
-    __slots__: tuple[str, ...] = ("lf", "target", "features")
-    lf: pl.LazyFrame
+    __slots__: tuple[str, ...] = ("lazy_frame", "target", "features")
+    lazy_frame: pl.LazyFrame
     target: str
     features: list[str]
 
@@ -15,7 +15,7 @@ class CorrelationAnalyzer:
         target: str,
         features: list[str],
     ) -> None:
-        self.lf = lazy_frame
+        self.lazy_frame = lazy_frame
         self.target = target
         self.features = features
 
@@ -28,7 +28,7 @@ class CorrelationAnalyzer:
             for feature in self.features
         ]
 
-        results_collected = self.lf.select(expressions).collect()  # type: ignore[reportArgumentType]
+        results_collected = self.lazy_frame.select(expressions).collect()  # type: ignore[reportArgumentType]
 
         correlations: dict[str, float] = {}
         for feature in self.features:
