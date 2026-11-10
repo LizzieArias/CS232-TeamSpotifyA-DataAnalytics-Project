@@ -64,23 +64,23 @@ def create_gam_fit(
     x: npt.NDArray[np.float64],
     y: npt.NDArray[np.float64],
     x_grid: npt.NDArray[np.float64],
-    pred: npt.NDArray[np.float64],
-    ci: npt.NDArray[np.float64],
+    prediction: npt.NDArray[np.float64],
+    confidence_intervals: npt.NDArray[np.float64],
     title: str,
 ) -> tuple[Figure, Axes]:
     fig, ax = plt.subplots(figsize=(10, 6))
     _ = ax.scatter(x, y, alpha=0.05, color="black", label="Tracks")
     _ = ax.plot(
         x_grid,
-        pred,
+        prediction,
         color="red",
         linewidth=3,
         label="GAM Fit (Smooth Spline)",
     )
     _ = ax.fill_between(
         x_grid,
-        ci[:, 0],
-        ci[:, 1],
+        confidence_intervals[:, 0],
+        confidence_intervals[:, 1],
         color="red",
         alpha=0.2,
         label="95% Confidence Interval",

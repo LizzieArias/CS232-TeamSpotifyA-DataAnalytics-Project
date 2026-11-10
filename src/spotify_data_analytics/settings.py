@@ -6,7 +6,11 @@ if TYPE_CHECKING:
 
     from .filtering import FilterRule
 
-__all__ = ["AnalyzeCorrelationsSettings", "PlotCorrelationsSettings"]
+__all__ = [
+    "AnalyzeCorrelationsSettings",
+    "PlotCorrelationsSettings",
+    "PlotGamSettings",
+]
 
 
 @dataclass(frozen=True)
@@ -49,3 +53,16 @@ class PlotCorrelationsSettings:
             "valence",
         ]
     )
+
+
+@dataclass(frozen=True)
+class PlotGamSettings:
+    input_path: Path
+    output_path: Path
+    title: str
+    n_splines: int = 12
+    n_grid: int = 200
+    target_column: str = "popularity"
+    feature_column: str = "duration_ms"
+    scale_divisor: float = 60000.0
+    filters: list["FilterRule"] = field(default_factory=list)
