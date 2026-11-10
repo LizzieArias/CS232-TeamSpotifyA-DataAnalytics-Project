@@ -1,6 +1,6 @@
 import scipy.sparse
 
-from .analysis import CorrelationAnalyzer
+from .analysis import CorrelationAnalyzer, InteractionAnalyzer
 from .cli import (
     get_analyze_correlations_arguments,
     get_plot_correlations_arguments,
@@ -37,6 +37,7 @@ for _class_name in ["csr_matrix", "csc_matrix", "coo_matrix", "spmatrix"]:
 
 __all__ = [
     "CorrelationAnalyzer",
+    "InteractionAnalyzer",
     "get_analyze_correlations_arguments",
     "get_plot_correlations_arguments",
     "get_plot_gam_arguments",
