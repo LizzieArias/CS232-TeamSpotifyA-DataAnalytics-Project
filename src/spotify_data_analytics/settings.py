@@ -25,6 +25,8 @@ class AnalyzeCorrelationsSettings:
         default_factory=lambda: [
             "danceability",
             "energy",
+            "tempo",
+            "loudness",
             "speechiness",
             "acousticness",
             "instrumentalness",
@@ -46,6 +48,8 @@ class PlotCorrelationsSettings:
         default_factory=lambda: [
             "danceability",
             "energy",
+            "tempo",
+            "loudness",
             "speechiness",
             "acousticness",
             "instrumentalness",
