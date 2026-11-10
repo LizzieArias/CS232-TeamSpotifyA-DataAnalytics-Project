@@ -1,9 +1,7 @@
-from typing import TYPE_CHECKING, Literal
+from typing import Literal
 
+import polars as pl
 from scipy.stats import pearsonr, spearmanr
-
-if TYPE_CHECKING:
-    import polars as pl
 
 __all__ = ["CorrelationSignificanceAnalyzer"]
 
@@ -31,16 +29,26 @@ class CorrelationSignificanceAnalyzer:
         df_collected = self.lazy_frame.select(  # type: ignore[reportArgumentType]
             [self.target] + self.features
         ).collect()
-        target_array = df_collected.get_column(self.target).to_numpy()
+        target_series = df_collected.get_column(self.target)
 
         results: dict[str, tuple[float, float]] = {}
         for feature in self.features:
-            feature_array = df_collected.get_column(feature).to_numpy()
+            feature_series = df_collected.get_column(feature)
+
+            pair_df = pl.DataFrame(
+                {self.target: target_series, feature: feature_series}
+            )
+
+            if feature == "tempo":
+                pair_df = pair_df.filter(pl.col("tempo") > 0)
+
+            x = pair_df.get_column(feature).to_numpy()  # type: ignore[reportArgumentType]
+            y = pair_df.get_column(self.target).to_numpy()  # type: ignore[reportArgumentType]
 
             if method == "pearson":
-                correlation, p_value = pearsonr(feature_array, target_array)
+                correlation, p_value = pearsonr(x, y)
             elif method == "spearman":
-                correlation, p_value = spearmanr(feature_array, target_array)
+                correlation, p_value = spearmanr(x, y)
 
             results[feature] = (float(correlation), float(p_value))
 

@@ -25,15 +25,18 @@ class CorrelationAnalyzer:
         self,
         method: Literal["pearson", "spearman"] = "pearson",
     ) -> dict[str, float]:
-        expressions = [
-            pl.corr(self.target, feature, method=method).alias(feature)
-            for feature in self.features
-        ]
-
-        results_collected = self.lazy_frame.select(expressions).collect()  # type: ignore[reportArgumentType]
-
         correlations: dict[str, float] = {}
+
         for feature in self.features:
+            lf = self.lazy_frame
+            if feature == "tempo":
+                lf = lf.filter(pl.col("tempo") > 0)
+
+            expression = pl.corr(self.target, feature, method=method).alias(
+                feature
+            )
+            results_collected = lf.select(expression).collect()  # type: ignore[reportArgumentType]
+
             correlation_value = results_collected.get_column(feature).item()  # pyright: ignore[reportAny]
             correlations[feature] = (
                 correlation_value if correlation_value is not None else 0.0
