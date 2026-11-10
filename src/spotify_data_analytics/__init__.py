@@ -17,7 +17,12 @@ from .filtering import (
     RangeFilter,
 )
 from .gam import GamAnalyzer
-from .plotting import create_correlation_bar_chart, create_gam_fit, save_figure
+from .plotting import (
+    create_correlation_bar_chart,
+    create_gam_fit,
+    create_interaction_bar_chart,
+    save_figure,
+)
 from .settings import (
     AnalyzeCorrelationsSettings,
     PlotCorrelationsSettings,
@@ -52,6 +57,7 @@ __all__ = [
     "GamAnalyzer",
     "create_correlation_bar_chart",
     "create_gam_fit",
+    "create_interaction_bar_chart",
     "save_figure",
     "AnalyzeCorrelationsSettings",
     "PlotCorrelationsSettings",
