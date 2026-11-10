@@ -13,7 +13,8 @@ if TYPE_CHECKING:
 __all__ = ["save_figure", "create_correlation_bar_chart"]
 
 
-def save_figure(figure: Figure, output_path: Path | str) -> None:
+def save_figure(figure: Figure, output_path: Path) -> None:
+    output_path.parent.mkdir(parents=True, exist_ok=True)
     figure.savefig(output_path, dpi=300, bbox_inches="tight")
 
 

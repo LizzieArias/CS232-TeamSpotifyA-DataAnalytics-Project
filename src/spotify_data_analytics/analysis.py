@@ -2,6 +2,8 @@ from typing import Literal
 
 import polars as pl
 
+__all__ = ["CorrelationAnalyzer"]
+
 
 class CorrelationAnalyzer:
     __slots__: tuple[str, ...] = ("lazy_frame", "target", "features")

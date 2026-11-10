@@ -31,10 +31,7 @@ def main() -> None:
     correlations = analyzer.compute_correlations(method="pearson")
 
     fig, _ = create_correlation_bar_chart(correlations, settings.title)
-
-    settings.output_path.parent.mkdir(parents=True, exist_ok=True)
     save_figure(fig, settings.output_path)
-
     plt.close(fig)
 
 

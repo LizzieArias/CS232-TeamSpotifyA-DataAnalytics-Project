@@ -1,5 +1,8 @@
 from .analysis import CorrelationAnalyzer
-from .cli import get_plot_correlations_arguments
+from .cli import (
+    get_analyze_correlations_arguments,
+    get_plot_correlations_arguments,
+)
 from .data_loading import DataLoader
 from .filtering import (
     CategoryFilter,
@@ -10,11 +13,13 @@ from .filtering import (
     RangeFilter,
 )
 from .plotting import create_correlation_bar_chart, save_figure
-from .settings import PlotCorrelationsSettings
+from .settings import AnalyzeCorrelationsSettings, PlotCorrelationsSettings
 from .significance import CorrelationSignificanceAnalyzer
+from .storage import CsvStorage, DataStorage, JsonStorage, create_storage
 
 __all__ = [
     "CorrelationAnalyzer",
+    "get_analyze_correlations_arguments",
     "get_plot_correlations_arguments",
     "DataLoader",
     "CategoryFilter",
@@ -25,6 +30,11 @@ __all__ = [
     "RangeFilter",
     "create_correlation_bar_chart",
     "save_figure",
+    "AnalyzeCorrelationsSettings",
     "PlotCorrelationsSettings",
     "CorrelationSignificanceAnalyzer",
+    "CsvStorage",
+    "DataStorage",
+    "JsonStorage",
+    "create_storage",
 ]
