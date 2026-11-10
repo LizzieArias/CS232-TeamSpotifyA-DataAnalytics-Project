@@ -8,6 +8,7 @@ __all__ = [
     "MaxThresholdFilter",
     "RangeFilter",
     "CategoryFilter",
+    "ExpressionTransformRule",
     "DataFilterPipeline",
 ]
 
@@ -76,6 +77,19 @@ class CategoryFilter:
 
     def apply(self, lf: pl.LazyFrame) -> pl.LazyFrame:
         return lf.filter(pl.col(self.column).is_in(self.allowed_values))
+
+
+class ExpressionTransformRule:
+    __slots__: tuple[str, ...] = ("expressions",)
+    expressions: list[pl.Expr]
+
+    def __init__(self, expressions: pl.Expr | list[pl.Expr]) -> None:
+        self.expressions = (
+            [expressions] if isinstance(expressions, pl.Expr) else expressions
+        )
+
+    def apply(self, lf: pl.LazyFrame) -> pl.LazyFrame:
+        return lf.with_columns(self.expressions)
 
 
 class DataFilterPipeline:

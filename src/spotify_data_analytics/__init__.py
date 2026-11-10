@@ -7,6 +7,7 @@ from .data_loading import DataLoader
 from .filtering import (
     CategoryFilter,
     DataFilterPipeline,
+    ExpressionTransformRule,
     FilterRule,
     MaxThresholdFilter,
     MinThresholdFilter,
@@ -25,6 +26,7 @@ __all__ = [
     "DataLoader",
     "CategoryFilter",
     "DataFilterPipeline",
+    "ExpressionTransformRule",
     "FilterRule",
     "MaxThresholdFilter",
     "MinThresholdFilter",
