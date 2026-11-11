@@ -1,9 +1,10 @@
+from pathlib import Path
 from typing import TYPE_CHECKING, Protocol, runtime_checkable
 
 import polars as pl
 
 if TYPE_CHECKING:
-    from pathlib import Path
+    import os
 
 __all__ = ["DataStorage", "CsvStorage", "JsonStorage", "create_storage"]
 
@@ -17,8 +18,8 @@ class CsvStorage:
     __slots__: tuple[str, ...] = ("output_path",)
     output_path: Path
 
-    def __init__(self, output_path: Path) -> None:
-        self.output_path = output_path
+    def __init__(self, output_path: str | os.PathLike[str]) -> None:
+        self.output_path = Path(output_path)
 
     def save(self, data: pl.DataFrame | pl.LazyFrame) -> None:
         self.output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -32,8 +33,8 @@ class JsonStorage:
     __slots__: tuple[str, ...] = ("output_path",)
     output_path: Path
 
-    def __init__(self, output_path: Path) -> None:
-        self.output_path = output_path
+    def __init__(self, output_path: str | os.PathLike[str]) -> None:
+        self.output_path = Path(output_path)
 
     def save(self, data: pl.DataFrame | pl.LazyFrame) -> None:
         self.output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -42,7 +43,8 @@ class JsonStorage:
         data.write_json(self.output_path)
 
 
-def create_storage(output_path: Path) -> DataStorage:
+def create_storage(output_path: str | os.PathLike[str]) -> DataStorage:
+    output_path = Path(output_path)
     suffix = output_path.suffix.lower()
 
     if suffix == ".csv":
