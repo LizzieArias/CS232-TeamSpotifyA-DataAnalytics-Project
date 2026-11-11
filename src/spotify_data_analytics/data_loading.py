@@ -1,9 +1,10 @@
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 import polars as pl
 
 if TYPE_CHECKING:
-    from pathlib import Path
+    import os
 
 __all__ = ["DataLoader"]
 
@@ -20,11 +21,11 @@ class DataLoader:
 
     def __init__(
         self,
-        file_path: Path,
+        file_path: str | os.PathLike[str],
         target: str,
         features: list[str],
     ) -> None:
-        self.file_path = file_path
+        self.file_path = Path(file_path)
         self.target = target
         self.features = features
 

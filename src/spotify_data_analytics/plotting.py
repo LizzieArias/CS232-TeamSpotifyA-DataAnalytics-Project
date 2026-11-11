@@ -1,10 +1,11 @@
 # pyright: reportUnknownMemberType=false
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 import matplotlib.pyplot as plt
 
 if TYPE_CHECKING:
-    from pathlib import Path
+    import os
 
     import numpy as np
     import numpy.typing as npt
@@ -21,8 +22,8 @@ __all__ = [
 ]
 
 
-def save_figure(figure: Figure, output_path: Path) -> None:
-    output_path.parent.mkdir(parents=True, exist_ok=True)
+def save_figure(figure: Figure, output_path: str | os.PathLike[str]) -> None:
+    Path(output_path).parent.mkdir(parents=True, exist_ok=True)
     figure.savefig(output_path, dpi=300, bbox_inches="tight")
 
 
