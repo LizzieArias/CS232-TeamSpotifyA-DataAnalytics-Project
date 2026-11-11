@@ -40,7 +40,7 @@ class CorrelationSignificanceAnalyzer:
             )
 
             if feature == "tempo":
-                pair_df = pair_df.filter(pl.col("tempo") > 0)
+                pair_df = pair_df.filter(pl.col("tempo").is_between(60, 200))
 
             x = pair_df.get_column(feature).to_numpy()  # type: ignore[reportArgumentType]
             y = pair_df.get_column(self.target).to_numpy()  # type: ignore[reportArgumentType]

@@ -32,7 +32,7 @@ class CorrelationAnalyzer:
         for feature in self.features:
             lf = self.lazy_frame
             if feature == "tempo":
-                lf = lf.filter(pl.col("tempo") > 0)
+                lf = lf.filter(pl.col("tempo").is_between(60, 200))
 
             expression = pl.corr(self.target, feature, method=method).alias(
                 feature
@@ -92,7 +92,7 @@ class InteractionAnalyzer:
 
         lf = self.lazy_frame
         if "tempo" in self.features:
-            lf = lf.filter(pl.col("tempo") > 0)
+            lf = lf.filter(pl.col("tempo").is_between(60, 200))
 
         df = (
             lf.with_columns(expressions)  # type: ignore[reportArgumentType]
