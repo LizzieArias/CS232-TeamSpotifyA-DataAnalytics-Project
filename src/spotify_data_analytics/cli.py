@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 from .filtering import MaxThresholdFilter, MinThresholdFilter, RangeFilter
 from .settings import (
     AnalyzeCorrelationsSettings,
+    AnalyzeGenresSettings,
     PlotCorrelationsSettings,
     PlotGamSettings,
     PlotInteractionsSettings,
@@ -18,6 +19,7 @@ __all__ = [
     "get_plot_correlations_arguments",
     "get_plot_gam_arguments",
     "get_plot_interactions_arguments",
+    "get_analyze_genres_arguments",
 ]
 
 
@@ -431,5 +433,118 @@ def get_plot_interactions_arguments() -> PlotInteractionsSettings:
         stats_output_path=namespace.stats_output,  # pyright: ignore[reportAny]
         method=namespace.method,  # pyright: ignore[reportAny]
         title=namespace.title,  # pyright: ignore[reportAny]
+        filters=filter_rules,
+    )
+
+
+def get_analyze_genres_arguments() -> AnalyzeGenresSettings:
+    parser = argparse.ArgumentParser(
+        description="Calculate Kruskal-Wallis significance tests and "
+        + "audio feature distributions across Spotify genres.",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+    _ = parser.add_argument(
+        "--tracks-input",
+        type=Path,
+        default=Path("data/normalized/tracks.csv"),
+        help="Path to the input tracks CSV file.",
+    )
+    _ = parser.add_argument(
+        "--track-genres-input",
+        type=Path,
+        default=Path("data/normalized/track_genres.csv"),
+        help="Path to the input track-genres mapping CSV file.",
+    )
+    _ = parser.add_argument(
+        "--genres-input",
+        type=Path,
+        default=Path("data/normalized/genres.csv"),
+        help="Path to the input genres CSV file.",
+    )
+    _ = parser.add_argument(
+        "--output",
+        type=Path,
+        default=Path(
+            "data/significance/genre_audio_features_significance.csv"
+        ),
+        help="Path to save the output statistical report CSV file.",
+    )
+    _ = parser.add_argument(
+        "--min-tracks",
+        type=int,
+        default=30,
+        help="Minimum track count threshold required to include "
+        + "a genre in the analysis.",
+    )
+    _ = parser.add_argument(
+        "--alpha",
+        type=float,
+        default=0.05,
+        help="Significance level (alpha) for hypothesis testing.",
+    )
+    _ = parser.add_argument(
+        "--min-threshold",
+        nargs=2,
+        action="append",
+        metavar=("COLUMN", "VALUE"),
+        help="Add a minimum threshold filter "
+        + "(e.g., --min-threshold popularity 10)",
+    )
+    _ = parser.add_argument(
+        "--max-threshold",
+        nargs=2,
+        action="append",
+        metavar=("COLUMN", "VALUE"),
+        help="Add a maximum threshold filter "
+        + "(e.g., --max-threshold duration_ms 360000)",
+    )
+    _ = parser.add_argument(
+        "--range",
+        nargs=3,
+        action="append",
+        metavar=("COLUMN", "MIN", "MAX"),
+        help="Add a range filter (e.g., --range duration_ms 120000 360000)",
+    )
+
+    namespace = parser.parse_args()
+
+    filter_rules: list[FilterRule] = []
+
+    min_thresholds: list[list[str]] | None = namespace.min_threshold  # pyright: ignore[reportAny]
+    if min_thresholds:
+        for column, value_string in min_thresholds:
+            filter_rules.append(
+                MinThresholdFilter(
+                    column=column, threshold=float(value_string)
+                )
+            )
+
+    max_thresholds: list[list[str]] | None = namespace.max_threshold  # pyright: ignore[reportAny]
+    if max_thresholds:
+        for column, value_string in max_thresholds:
+            filter_rules.append(
+                MaxThresholdFilter(
+                    column=column, threshold=float(value_string)
+                )
+            )
+
+    ranges: list[list[str]] | None = namespace.range  # pyright: ignore[reportAny]
+    if ranges:
+        for column, min_str, max_str in ranges:
+            filter_rules.append(
+                RangeFilter(
+                    column=column,
+                    min_value=float(min_str),
+                    max_value=float(max_str),
+                )
+            )
+
+    return AnalyzeGenresSettings(
+        tracks_input_path=namespace.tracks_input,  # pyright: ignore[reportAny]
+        track_genres_input_path=namespace.track_genres_input,  # pyright: ignore[reportAny]
+        genres_input_path=namespace.genres_input,  # pyright: ignore[reportAny]
+        output_path=namespace.output,  # pyright: ignore[reportAny]
+        min_tracks=namespace.min_tracks,  # pyright: ignore[reportAny]
+        alpha=namespace.alpha,  # pyright: ignore[reportAny]
         filters=filter_rules,
     )

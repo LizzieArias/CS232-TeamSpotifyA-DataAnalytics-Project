@@ -1,8 +1,9 @@
 import scipy.sparse
 
-from .analysis import CorrelationAnalyzer, InteractionAnalyzer
+from .analysis import CorrelationAnalyzer, GenreAnalyzer, InteractionAnalyzer
 from .cli import (
     get_analyze_correlations_arguments,
+    get_analyze_genres_arguments,
     get_plot_correlations_arguments,
     get_plot_gam_arguments,
     get_plot_interactions_arguments,
@@ -26,6 +27,7 @@ from .plotting import (
 )
 from .settings import (
     AnalyzeCorrelationsSettings,
+    AnalyzeGenresSettings,
     PlotCorrelationsSettings,
     PlotGamSettings,
     PlotInteractionsSettings,
@@ -44,8 +46,10 @@ for _class_name in ["csr_matrix", "csc_matrix", "coo_matrix", "spmatrix"]:
 
 __all__ = [
     "CorrelationAnalyzer",
+    "GenreAnalyzer",
     "InteractionAnalyzer",
     "get_analyze_correlations_arguments",
+    "get_analyze_genres_arguments",
     "get_plot_correlations_arguments",
     "get_plot_gam_arguments",
     "get_plot_interactions_arguments",
@@ -63,6 +67,7 @@ __all__ = [
     "create_interaction_bar_chart",
     "save_figure",
     "AnalyzeCorrelationsSettings",
+    "AnalyzeGenresSettings",
     "PlotCorrelationsSettings",
     "PlotGamSettings",
     "PlotInteractionsSettings",

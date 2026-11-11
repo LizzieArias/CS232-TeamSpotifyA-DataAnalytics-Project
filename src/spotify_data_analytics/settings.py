@@ -11,6 +11,7 @@ __all__ = [
     "PlotCorrelationsSettings",
     "PlotGamSettings",
     "PlotInteractionsSettings",
+    "AnalyzeGenresSettings",
 ]
 
 
@@ -80,6 +81,31 @@ class PlotInteractionsSettings:
     stats_output_path: Path
     method: Literal["pearson", "spearman"]
     title: str
+    target_column: str = "popularity"
+    filters: list["FilterRule"] = field(default_factory=list)
+    features: list[str] = field(
+        default_factory=lambda: [
+            "danceability",
+            "energy",
+            "tempo",
+            "loudness",
+            "speechiness",
+            "acousticness",
+            "instrumentalness",
+            "liveness",
+            "valence",
+        ]
+    )
+
+
+@dataclass(frozen=True)
+class AnalyzeGenresSettings:
+    tracks_input_path: Path
+    track_genres_input_path: Path
+    genres_input_path: Path
+    output_path: Path
+    min_tracks: int = 30
+    alpha: float = 0.05
     target_column: str = "popularity"
     filters: list["FilterRule"] = field(default_factory=list)
     features: list[str] = field(

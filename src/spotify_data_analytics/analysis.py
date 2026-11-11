@@ -2,9 +2,9 @@ from typing import Literal
 
 import numpy as np
 import polars as pl
-from scipy.stats import pearsonr, spearmanr
+from scipy.stats import kruskal, pearsonr, spearmanr
 
-__all__ = ["CorrelationAnalyzer", "InteractionAnalyzer"]
+__all__ = ["CorrelationAnalyzer", "InteractionAnalyzer", "GenreAnalyzer"]
 
 
 class CorrelationAnalyzer:
@@ -133,3 +133,76 @@ class InteractionAnalyzer:
             pl.col("correlation").abs(),
             descending=True,
         )
+
+
+class GenreAnalyzer:
+    __slots__: tuple[str, ...] = (
+        "tracks_lazy_frame",
+        "track_genres_lazy_frame",
+        "genres_lazy_frame",
+        "features",
+    )
+    tracks_lazy_frame: pl.LazyFrame
+    track_genres_lazy_frame: pl.LazyFrame
+    genres_lazy_frame: pl.LazyFrame
+    features: list[str]
+
+    def __init__(
+        self,
+        tracks_lazy_frame: pl.LazyFrame,
+        track_genres_lazy_frame: pl.LazyFrame,
+        genres_lazy_frame: pl.LazyFrame,
+        features: list[str],
+    ) -> None:
+        self.tracks_lazy_frame = tracks_lazy_frame
+        self.track_genres_lazy_frame = track_genres_lazy_frame
+        self.genres_lazy_frame = genres_lazy_frame
+        self.features = features
+
+    def compute_kruskal_wallis(self, min_tracks: int = 30) -> pl.DataFrame:
+        joined_lf = (
+            self.tracks_lazy_frame.join(  # type: ignore[reportArgumentType]
+                self.track_genres_lazy_frame,
+                on="track_id",
+                how="inner",
+            )
+            .join(self.genres_lazy_frame, on="genre_id", how="inner")
+            .select(["genre_name", "track_id"] + self.features)
+        )
+
+        filtered_lf = joined_lf.filter(
+            pl.len().over("genre_name") >= min_tracks
+        )
+
+        filtered_df = filtered_lf.collect()
+
+        results: list[dict[str, str | float]] = []
+
+        for feature in self.features:
+            feature_data = filtered_df.select(["genre_name", feature])
+
+            if feature == "tempo":
+                feature_data = feature_data.filter(
+                    pl.col("tempo").is_between(60, 200)
+                )
+
+            groups = [
+                group.get_column(feature).to_numpy()
+                for _, group in feature_data.group_by("genre_name")
+                if len(group) > 0
+            ]
+
+            if len(groups) > 1:
+                statistic, p_value = kruskal(*groups)
+            else:
+                statistic, p_value = 0.0, 1.0
+
+            results.append(
+                {
+                    "feature": feature,
+                    "h_statistic": float(statistic),
+                    "p_value": float(p_value),
+                }
+            )
+
+        return pl.DataFrame(results).sort("h_statistic", descending=True)
